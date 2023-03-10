@@ -1,0 +1,53 @@
+Config { font = "xft:Fira Code:pixelsize=10:antialias=true:hinting=true"
+       , additionalFonts = [
+                    "xft:Mononoki Nerd Font:pixelsize=10:antialias=true:hinting=true",
+                    "xft:FontAwesome:pixelsize=11"
+	]
+       , borderColor = "black"
+       , border = NoBorder -- default: TopB
+       , bgColor = "black"
+       , fgColor = "grey"
+       , alpha = 150
+       , position = Top
+       , textOffset = -1
+       , iconOffset = -1
+       , lowerOnStart = True
+       , pickBroadest = False
+       , persistent = False
+       , hideOnStart = False
+       , iconRoot = "/home/juhel/.xmonad/xpm/" -- default: "."
+       , allDesktops = True
+       , overrideRedirect = True
+       , commands = [ -- Run Weather "EGPF" ["-t","<station>: <tempC>C",
+                      --                    "-L","18","-H","25",
+                      --                    "--normal","green",
+                      --                    "--high","red",
+                      --                    "--low","lightblue"] 36000
+                    Run Network "enp2s0f1" ["-L","0","-H","32"] 10
+                                          -- "--normal","green","--high","green"] 10
+                    , Run Network "wlp3s0" ["-L","0","-H","32"] 10
+                    , Run Wireless "wlp3s0" [ "-t", "<essid>" ] 10
+                    , Run Cpu ["-L","3","-H","50",
+		    "--normal","#ffc0cb","--high","#f400a1"] 10
+                    , Run Memory ["-t","Mem: <usedratio>%"] 10
+                    , Run Swap [] 10
+                    , Run Com "uname" ["-s","-r"] "" 36000
+		      -- can run script too
+                    , Run Date "%a %b %_d %Y %H:%M" "date" 100
+                    , Run Battery ["-t", "<acstatus>: <left>%",
+                                   "--Low", "25",
+                                   "--High", "80",
+                                   "--low", "red",
+                                   "--normal", "yellow",
+                                   "--high", "yellow",
+                                   "--",
+                                   -- "-c", "charge_full",
+                                   "-O", "AC",
+                                   "-o", "Bat"
+                                   ] 10
+                    , Run UnsafeStdinReader
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "%UnsafeStdinReader% }{ <fc=#96c8a2>%enp2s0f1%</fc> - <fc=#ff69b4>%wlp3s0%</fc> <fc=#3eb489>%wlp3s0wi%</fc> | <fc=#ffc0cb>%cpu%</fc> | <fc=#ff00ff>%memory% * %swap%</fc> | <fc=yellow>%battery%</fc> | <fc=#ee9a00>%date%</fc> "
+       }

@@ -1,0 +1,215 @@
+call plug#begin('~/.vim/plugged')
+
+" Fugitive vim Github wrapper
+Plug 'tpope/vim-fugitive'
+Plug 'rhysd/git-messenger.vim'
+
+" Nerd tree
+Plug 'preservim/nerdtree'
+Plug 'ryanoasis/vim-devicons'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+" commenter need new good one
+Plug 'preservim/nerdcommenter'
+
+" Theme
+Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'itchyny/lightline.vim'
+Plug 'sheerun/vim-polyglot'
+Plug 'ap/vim-css-color'
+
+" autocomplete
+Plug 'ervandew/supertab'
+
+" fuzzy finder
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'dyng/ctrlsf.vim'
+Plug 'pechorin/any-jump.vim'
+
+Plug 'prettier/vim-prettier', { 'do': 'npm install --frozen-lockfile --production' }
+
+Plug 'preservim/tagbar'
+Plug 'tpope/vim-surround'
+Plug 'vim-syntastic/syntastic'
+Plug 'mattn/emmet-vim'
+
+call plug#end()
+
+
+set nocompatible
+
+" Call the plugin file vim.plug file
+if filereadable(expand("~/.vim/plug.vim")) 
+	source ~/.vim/plug.vim
+endif
+
+set termguicolors
+set t_Co=256
+filetype plugin indent on
+syntax on
+set encoding=UTF-8
+
+set number relativenumber
+
+" set tab size
+set tabstop=4
+set shiftwidth=4
+set expandtab
+
+" autocompletion of brackets
+inoremap " ""<left>
+inoremap ' ''<left>
+inoremap ` ``<left>
+inoremap ( ()<left>
+inoremap [ []<left>
+inoremap { {}<left>
+inoremap {<CR> {<CR>}<ESC>O
+inoremap {;<CR> {<CR>};<ESC>O 
+
+" split navigation keymap
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
+" Below mapping not working
+"map <C-\<> <C-w>\<
+"map <C-\>> <C-w>\>
+
+" Alias to write
+nnoremap <C-s> :w<CR>
+
+autocmd BufNewFile,BufRead *.hbs set filetype=html
+
+
+"""" NERD Tree
+" NERD tree bindings
+nmap <C-e> :NERDTreeToggle<CR>
+
+" Start NERDTree when Vim starts with a directory argument.
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists('s:std_in') |
+    \ execute 'NERDTree' argv()[0] | wincmd p | enew | execute 'cd '.argv()[0] | endif
+
+" Exit Vim if NERDTree is the only window remaining in the only tab.
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+
+" Close the tab if NERDTree is the only window remaining in it.
+autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+
+let g:webdevicons_enable_nerdtree = 1
+
+
+"""" Prettier
+" let g:prettier#exec_cmd_path = "/home/juhel/.vim/plugged/vim-prettier/plugin/prettier.vim"
+
+
+"""" Dracula
+colorscheme dracula
+" Transparent background
+let g:dracula_colorterm = 0
+
+" Toggle background transparency
+function! ToggleBackgroundTransparency()
+	if g:dracula_colorterm == 1
+		let g:dracula_colorterm = 0
+		colorscheme dracula
+	else
+		let g:dracula_colorterm = 1
+		colorscheme dracula
+	endif
+endfunction
+command! BackgroundTransparencyToggle :call ToggleBackgroundTransparency()
+
+
+"""" Lightline
+set laststatus=2
+set background=dark
+let g:lightline = {
+    \'colorscheme': 'one',
+    \'active': {
+    \	'left': [ 
+	\		[ 'mode', 'paste' ],
+    \    	[ 'gitbranch', 'readonly', 'filename', 'modified' ]
+	\	]
+    \},
+    \'component_function': {
+   	\    'gitbranch': 'FugitiveHead'
+    \},
+	\}
+
+
+"""" Emmet vim
+let g:user_emmet_leader_key='\'
+
+
+"""" vim syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_enable_signs = 1
+
+"""" vim polyglot
+let g:python_highlight_all = 1
+
+
+"""" Netrw | file explorer
+"let g:netrw_banner = 0
+"let g:netrw_liststyle = 3
+"let g:netrw_browse_split = 4
+"let g:netrw_winsize = 20
+"
+"" Netrw | Open file to the right
+"function! OpenToRight()
+"	:normal v
+"	let g:path=expand('%:p')
+"	:q!
+"	execute 'belowright vnew' g:path
+"	:normal <C-l>
+"endfunction
+"
+"" Netrw | Open file below
+"function! OpenBelow()
+"	:normal v
+"	let g:path=expand('%:p')
+"	:q!
+"	execute 'belowright new' g:path
+"	:normal <C-l>
+"endfunction
+"
+"let g:NetrwIsOpen = 0
+"" Netrw | toggle netrw
+"function! ToggleNetrw()
+"	if g:NetrwIsOpen
+"		let i = bufnr("$")
+"		while (i >= 1)
+"			if (getbufvar(i, "&filetype") == "netrw")
+"				silent exe "bwipeout" . i
+"			endif
+"			let i-=1
+"		endwhile
+"		let g:NetrwIsOpen=0
+"	else
+"		let g:NetrwIsOpen=1
+"		silent Lexplore
+"	endif
+"endfunction
+"
+"" Netrw | keybindings
+"function! NetrwMappings()
+"	noremap <buffer> <C-l> <C-w>l
+"	noremap <silent> <C-e> :call ToggleNetrw()<CR>
+"	noremap <buffer> V :call OpenToRight()<cr>
+"	noremap <buffer> H :call OpenBelow()<cr>
+"endfunction
+"
+"augroup netrw_mappings
+"	autocmd!
+"	autocmd filetype netrw call NetrwMappings()
+"augroup END
+
+

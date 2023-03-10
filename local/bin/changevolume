@@ -1,0 +1,27 @@
+#!/bin/bash
+
+function send_notification() {
+    volume=$(awk -F"[][]" '/Left:/ { print $2 }' <(amixer sget Master))
+    dunstify -a "changevolume" -u low -r "9993" -h int:value:"$volume" -I ~/.local/share/icons/notification/volume-$1.png "Volume: ${volume}" -t 2000
+}
+
+case $1 in
+up)
+    # Set the volume on (if it was muted)
+    amixer -D pipewire sset Master 5%+
+    send_notification $1
+    ;;
+down)
+    amixer -D pipewire sset Master 5%-
+    send_notification $1
+    ;;
+toggle)
+    amixer -D pipewire sset Master toggle
+    stat=$(awk -F"[][]" '/Left:/ { print $4 }' <(amixer sget Master))
+    if [[ $stat == "off" ]]; then
+        dunstify -I ~/.local/share/icons/notification/volume-off.png -a "changevolume" -t 2000 -r 9993 -u low "Muted"
+    else
+        send_notification up
+    fi
+    ;;
+esac

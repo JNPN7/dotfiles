@@ -1,0 +1,19 @@
+#!/bin/bash
+
+function send_notification() {
+    brightness=$(xbacklight -get)
+    brightness=$( printf "%.0f" $brightness ) # float into int
+    dunstify -a "changebrightness" -u low -r "9992" -h int:value:"$brightness" -I ~/.local/share/icons/notification/brightness.png "Brightness: ${brightness}%" -t 2000
+}
+
+case $1 in
+up)
+    # Set the volume on (if it was muted)
+    xbacklight -inc 5
+    send_notification $1
+    ;;
+down)
+    xbacklight -dec 5
+    send_notification $1
+    ;;
+esac
