@@ -80,6 +80,8 @@ nnoremap <C-s> :w<CR>
 
 autocmd BufNewFile,BufRead *.hbs set filetype=html
 
+" Alias to copy to clipboard
+vnoremap <silent><Leader>y "yy <Bar> :call system('xclip -selection clipboard', @y)<CR>
 
 """" NERD Tree
 " NERD tree bindings

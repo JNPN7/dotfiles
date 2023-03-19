@@ -49,13 +49,14 @@ detect_venv() {
 # check if running with sudo privilages to change color
 check_sudo() {
 	if [[ "${THEME_CHECK_SUDO}" = true ]]; then
+        prompt_color=${cyan}
 		sudo -vn 1> /dev/null 2>&1 && prompt_color=${yellow}
 	fi
 }
 
 prompt() {
     check_sudo
-	SCM_PROMPT_FORMAT='[%s][%s]'
+    SCM_PROMPT_FORMAT='[%s][%s]'
 	retval=$?
 	if [[ retval -ne 0 ]]; then
 		PS1="\n${TITLEBAR}${bold_red}┌─${reset_color}[${prompt_color}${name}${normal}][${green}$(python_version_prompt)${normal}][${purple}node$(node_version_prompt)${normal}][${cyan}\w${normal}]$(is_vim_shell)\n${bold_red}└─🦉→ ${normal} "

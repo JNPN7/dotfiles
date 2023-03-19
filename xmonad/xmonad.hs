@@ -174,7 +174,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Use this binding with avoidStruts from Hooks.ManageDocks.
     -- See also the statusBar function from Hooks.DynamicLog.
     --
-    -- , ((modm              , xK_b     ), sendMessage ToggleStruts)
+    , ((modm              , xK_b     ), sendMessage ToggleStruts)
 
     -- Quit xmonad
     , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
@@ -209,8 +209,14 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- scratchpad <Terminal>
     , ((0, xK_F12                    ), namedScratchpadAction myScratchPads "terminal")
 
+    -- scratchpad <Terminal>
+    , ((modm              , xK_m     ), namedScratchpadAction myScratchPads "spotify")
+
     -- notification history
     , ((modm              , xK_n     ), spawn "dunstctl history-pop")
+
+    -- change wallpaper
+    , ((modm .|. shiftMask, xK_b     ), spawn "variety -n")
     ]
     ++
 
@@ -302,6 +308,7 @@ myManageHook = composeAll
     [ className =? "MPlayer"                      --> doFloat
     , className =? "Gimp"                         --> doFloat
     , className  =? "Alacritty"                   --> (customFloating $ W.RationalRect 0.1 0.1 0.8 0.8)
+    , className  =? "qutebrowser"                 --> (customFloating $ W.RationalRect 0.05 0.05 0.9 0.9)
 --    , className =? "vlc"                          --> doFloat
 
 -- specific apps in appropriate workspace
@@ -473,8 +480,14 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
 --------------------------------------------------------------------------
 myScratchPads :: [NamedScratchpad]
 myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
+                , NS "spotify"  spawnSpotify findSpotify manageSpotify
                 ]
     where
         spawnTerm  = "alacritty -t 'May the Force be with You'"
         findTerm   = className =? "Alacritty"
         manageTerm = customFloating $ W.RationalRect 0.1 0.1 0.8 0.8
+        
+        spawnSpotify  = "qutebrowser open.spotify.com"
+        findSpotify   = className =? "qutebrowser"
+        manageSpotify = customFloating $ W.RationalRect 0.1 0.1 0.8 0.8
+        
