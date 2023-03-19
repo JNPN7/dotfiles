@@ -209,8 +209,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- scratchpad <Terminal>
     , ((0, xK_F12                    ), namedScratchpadAction myScratchPads "terminal")
 
-    -- scratchpad <Terminal>
+    -- scratchpad <spotify>
     , ((modm              , xK_m     ), namedScratchpadAction myScratchPads "spotify")
+
+    -- scratchpad <copyq>
+    , ((modm              , xK_c     ), namedScratchpadAction myScratchPads "copyq")
 
     -- notification history
     , ((modm              , xK_n     ), spawn "dunstctl history-pop")
@@ -309,6 +312,7 @@ myManageHook = composeAll
     , className =? "Gimp"                         --> doFloat
     , className  =? "Alacritty"                   --> (customFloating $ W.RationalRect 0.1 0.1 0.8 0.8)
     , className  =? "qutebrowser"                 --> (customFloating $ W.RationalRect 0.05 0.05 0.9 0.9)
+    , className  =? "copyq"                       --> (customFloating $ W.RationalRect 0.15 0.15 0.7 0.7)
 --    , className =? "vlc"                          --> doFloat
 
 -- specific apps in appropriate workspace
@@ -479,8 +483,9 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     -- Scratchpads
 --------------------------------------------------------------------------
 myScratchPads :: [NamedScratchpad]
-myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
+myScratchPads = [ NS "terminal" spawnTerm    findTerm    manageTerm
                 , NS "spotify"  spawnSpotify findSpotify manageSpotify
+                , NS "copyq"    spawnCopyq   findCopyq   manageCopyq
                 ]
     where
         spawnTerm  = "alacritty -t 'May the Force be with You'"
@@ -489,5 +494,9 @@ myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
         
         spawnSpotify  = "qutebrowser open.spotify.com"
         findSpotify   = className =? "qutebrowser"
-        manageSpotify = customFloating $ W.RationalRect 0.1 0.1 0.8 0.8
+        manageSpotify = customFloating $ W.RationalRect 0.05 0.05 0.9 0.9
+
+        spawnCopyq  = "copyq& copyq show"
+        findCopyq   = className =? "copyq"
+        manageCopyq = customFloating $ W.RationalRect 0.1 0.1 0.8 0.8
         
