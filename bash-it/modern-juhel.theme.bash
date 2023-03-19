@@ -11,7 +11,7 @@ SCM_GIT_CHAR="${bold_green}±${normal}"
 SCM_SVN_CHAR="${bold_cyan}⑆${normal}"
 SCM_HG_CHAR="${bold_red}☿${normal}"
 
-THEME_CHECK_SUDO=${THEME_CHECK_SUDO:=true}
+THEME_CHECK_SUDO=true
 
 prompt_color=${cyan}
 
